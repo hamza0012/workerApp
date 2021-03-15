@@ -33,11 +33,11 @@ import static android.content.pm.PackageManager.PERMISSION_DENIED;
 
 public class Documents_Screen extends AppCompatActivity {
 
-    TextView uploadphoto, uploaddata;
+    TextView uploadphoto, uploadphoto2, uploaddata;
     private static final int IMAGE_PICK_CODE = 1000;
     private static final int PERMISSION_CODE = 1001;
-    String imageString1;
-    ImageView image1;
+    String imageString1,imageString2,imageString3,imageString4;
+    ImageView image1,image2,image3,image4;
      String value1 , value2 , value3;
 
     @Override
@@ -53,9 +53,17 @@ public class Documents_Screen extends AppCompatActivity {
         value3 = getIntent().getExtras().getString("wnumber");
 
         uploadphoto = findViewById(R.id.uploadphoto);
+        uploadphoto2 = findViewById(R.id.uploadCNIC2);
+
         uploaddata = findViewById(R.id.uploadtodatabse);
 
         image1 = findViewById(R.id.imageView1);
+        image2 = findViewById(R.id.imageView2);
+        image3 = findViewById(R.id.imageView3);
+        image4 = findViewById(R.id.imageView4);
+
+
+        //*************************************** UPLOADING FIRST PIC *************************
 
         uploadphoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,11 +89,40 @@ public class Documents_Screen extends AppCompatActivity {
             }
         });
 
+//*************************************** END *************************
+
+        uploadphoto2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                    if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                            == PackageManager.PERMISSION_DENIED){
+                        //permission not granted, request it.
+                        String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE};
+                        //show popup for runtime permission
+                        requestPermissions(permissions, PERMISSION_CODE);
+                    }
+                    else {
+                        //permission already granted
+                        pickImageFromGallery();
+                    }
+                }
+                else {
+                    //system os is less then marshmallow
+                    pickImageFromGallery();
+                }
+            }
+        });
+
+        //*************************************** UPLOADING 2nd PIC *************************
 
 
 
-
+//*************************************** END *************************
     }
+
+    //************************* UPLOAD DATA TO DATABASE **********************************
     public void uploadworkerDocuments(View v){
 
        // Toast.makeText(getApplicationContext(),"Click",Toast.LENGTH_SHORT).show();
@@ -121,6 +158,8 @@ public class Documents_Screen extends AppCompatActivity {
             }
         });
     }
+//***********************************END****************************************************
+
 
     private void pickImageFromGallery() {
         //intent to pick image
@@ -152,6 +191,7 @@ public class Documents_Screen extends AppCompatActivity {
         if (resultCode == RESULT_OK && requestCode == IMAGE_PICK_CODE) {
             //set image to image view
              image1.setImageURI(data.getData());
+
             Bitmap bitmap = Bitmap.createBitmap(image1.getWidth(), image1.getHeight(), Bitmap.Config.RGB_565);
             Canvas canvas = new Canvas(bitmap);
             image1.draw(canvas);
@@ -160,6 +200,7 @@ public class Documents_Screen extends AppCompatActivity {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
             byte[] imageBytes = byteArrayOutputStream.toByteArray();
              imageString1 = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+
             Toast.makeText(getApplicationContext(),imageString1,Toast.LENGTH_LONG).show();
 
                   }
