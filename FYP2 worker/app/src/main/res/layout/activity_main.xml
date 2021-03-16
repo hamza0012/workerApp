@@ -25,7 +25,7 @@
             android:id="@+id/firsthead"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sign in account"
+            android:text="Sign in account fork"
             android:textSize="40dp"
             android:textColor="#000"
             android:layout_centerHorizontal="true"
